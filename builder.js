@@ -832,11 +832,16 @@ function saveResumeDataFile(data) {
 
 // Function to handle resume file upload
 async function handleResumeUpload(event) {
+    console.log('handleResumeUpload called');
     const file = event.target.files[0];
     if (!file) return;
     
+    console.log('File selected:', file.name);
+    
     // Check file type
     const fileType = file.name.split('.').pop().toLowerCase();
+    console.log('File type detected:', fileType);
+    
     if (!['pdf', 'json', 'txt'].includes(fileType)) {
         alert('❌ Please upload a PDF, JSON, or TXT file');
         return;
