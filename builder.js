@@ -323,13 +323,33 @@ function downloadPDF() {
         
         // Header with or without photo
         if (data.photo) {
-            // Add photo to PDF
+            // Add circular photo to PDF
             try {
                 const photoSize = 25;
                 const photoX = pageWidth - margin - photoSize;
                 const photoY = yPosition - 5;
+                const centerX = photoX + photoSize / 2;
+                const centerY = photoY + photoSize / 2;
+                const radius = photoSize / 2;
                 
+                // Save the current graphics state
+                doc.saveGraphicsState();
+                
+                // Create circular clipping path
+                doc.circle(centerX, centerY, radius);
+                doc.clip();
+                
+                // Add the image (it will be clipped to the circle)
                 doc.addImage(data.photo, 'JPEG', photoX, photoY, photoSize, photoSize);
+                
+                // Restore graphics state to remove clipping
+                doc.restoreGraphicsState();
+                
+                // Add circular border
+                doc.setDrawColor(0, 0, 0); // Black border
+                doc.setLineWidth(0.5);
+                doc.circle(centerX, centerY, radius);
+                doc.stroke();
                 
                 // Name and contact info (left side)
                 if (data.fullName) {
