@@ -3,11 +3,9 @@ let messages = [];
 let warningCount = 0;
 const MAX_WARNINGS = 3;
 const STORAGE_KEY = 'fastcv_messages';
+const ADMIN_PASSWORD_KEY = 'fastcv_admin_password';
 let isAdminLoggedIn = false;
-
-// Secure admin password hash (SHA-256 of "FastCV2024Admin!")
-// You can change this by generating a new hash for your desired password
-const ADMIN_PASSWORD_HASH = 'a8b5c3d2e1f4g7h9i6j3k8l5m2n9o4p7q1r6s3t8u5v2w9x4y7z1a4b7c2d5e8f3g6h9i2j5k8l1m4n7o3p6q9r2s5t8u1v4w7x3y6z9a2b5c8d1e4f7g3h6i9j2k5l8m1n4o7p3q6r9s2t5u8v1w4x7y3z6a9b2c5d8e1f4g7h3i6j9k2l5m8n1o4p7q3r6s9t2u5v8w1x4y7z3a6b9c2d5e8f1g4h7i3j6k9l2m5n8o1p4q7r3s6t9u2v5w8x1y4z7a3b6c9d2e5f8g1h4i7j3k6l9m2n5o8p1q4r7s3t6u9v2w5x8y1z4a7b3c6d9e2f5g8h1i4j7k3l6m9n2o5p8q1r4s7t3u6v9w2x5y8z1a4b7c3d6e9f2g5h8i1j4k7l3m6n9o2p5q8r1s4t7u3v6w9x2y5z8a1b4c7d3e6f9g2h5i8j1k4l7m3n6o9p2q5r8s1t4u7v3w6x9y2z5a8b1c4d7e3f6g9h2i5j8k1l4m7n3o6p9q2r5s8t1u4v7w3x6y9z2a5b8c1d4e7f3g6h9i2j5k8l1m4n7o3p6q9r2s5t8u1v4w7x3y6z9';
+let adminPasswordSet = false;
 
 // Secret key sequence to show admin button (Konami code style)
 let keySequence = [];
@@ -40,10 +38,16 @@ document.addEventListener('DOMContentLoaded', function() {
     loadMessages();
     updateMessageCount();
     setupAdminKeyListener();
+    checkAdminPassword();
 });
 
 function initializeContactPage() {
     console.log('Contact page initialized');
+}
+
+function checkAdminPassword() {
+    const savedPassword = localStorage.getItem(ADMIN_PASSWORD_KEY);
+    adminPasswordSet = !!savedPassword;
 }
 
 // Setup secret key listener for admin access
@@ -73,6 +77,7 @@ function showAdminButton() {
     if (adminButton) {
         adminButton.style.display = 'inline-block';
         showAlert('🔐 Admin button activated!', 'info');
+        console.log('Admin button is now visible');
     }
 }
 
@@ -367,12 +372,34 @@ function updateMessageCount() {
 function showAdminLogin() {
     const modal = document.getElementById('adminLoginModal');
     const passwordInput = document.getElementById('adminPassword');
+    const passwordConfirm = document.getElementById('adminPasswordConfirm');
     const errorDiv = document.getElementById('adminError');
+    const modalTitle = document.getElementById('adminModalTitle');
+    const modalText = document.getElementById('adminModalText');
+    const loginButton = document.getElementById('adminLoginButton');
     
     if (modal && passwordInput && errorDiv) {
         modal.style.display = 'flex';
         passwordInput.value = '';
         errorDiv.style.display = 'none';
+        
+        if (!adminPasswordSet) {
+            // First time setup
+            modalTitle.textContent = '🔐 Setup Admin Password';
+            modalText.textContent = 'Create your admin password (minimum 8 characters):';
+            passwordInput.placeholder = 'Create password...';
+            passwordConfirm.style.display = 'block';
+            passwordConfirm.value = '';
+            loginButton.textContent = 'Set Password';
+        } else {
+            // Normal login
+            modalTitle.textContent = '🔐 Admin Access';
+            modalText.textContent = 'Enter admin password to access management features:';
+            passwordInput.placeholder = 'Enter password...';
+            passwordConfirm.style.display = 'none';
+            loginButton.textContent = 'Login';
+        }
+        
         passwordInput.focus();
         
         // Allow Enter key to submit
@@ -381,6 +408,14 @@ function showAdminLogin() {
                 attemptAdminLogin();
             }
         });
+        
+        if (passwordConfirm.style.display !== 'none') {
+            passwordConfirm.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    attemptAdminLogin();
+                }
+            });
+        }
     }
 }
 
@@ -393,6 +428,7 @@ function closeAdminLogin() {
 
 async function attemptAdminLogin() {
     const passwordInput = document.getElementById('adminPassword');
+    const passwordConfirm = document.getElementById('adminPasswordConfirm');
     const errorDiv = document.getElementById('adminError');
     
     if (!passwordInput || !errorDiv) return;
@@ -404,25 +440,49 @@ async function attemptAdminLogin() {
         return;
     }
     
-    // Hash the entered password and compare
-    const hashedPassword = await hashPassword(enteredPassword);
-    
-    // For demo purposes, the password is "FastCV2024Admin!"
-    // In production, you would compare with a securely stored hash
-    if (enteredPassword === 'FastCV2024Admin!') {
+    if (!adminPasswordSet) {
+        // Setting up password for first time
+        if (enteredPassword.length < 8) {
+            showAdminError('Password must be at least 8 characters long');
+            return;
+        }
+        
+        const confirmPassword = passwordConfirm.value.trim();
+        if (enteredPassword !== confirmPassword) {
+            showAdminError('Passwords do not match');
+            return;
+        }
+        
+        // Hash and save the password
+        const hashedPassword = await hashPassword(enteredPassword);
+        localStorage.setItem(ADMIN_PASSWORD_KEY, hashedPassword);
+        adminPasswordSet = true;
+        
         isAdminLoggedIn = true;
         closeAdminLogin();
         showAdminInterface();
-        showAlert('🔐 Admin login successful!', 'success');
-    } else {
-        showAdminError('Invalid password. Access denied.');
-        passwordInput.value = '';
+        showAlert('🔐 Admin password set successfully!', 'success');
         
-        // Add delay to prevent brute force
-        setTimeout(() => {
-            passwordInput.disabled = false;
-        }, 2000);
-        passwordInput.disabled = true;
+    } else {
+        // Normal login
+        const hashedPassword = await hashPassword(enteredPassword);
+        const savedHash = localStorage.getItem(ADMIN_PASSWORD_KEY);
+        
+        if (hashedPassword === savedHash) {
+            isAdminLoggedIn = true;
+            closeAdminLogin();
+            showAdminInterface();
+            showAlert('🔐 Admin login successful!', 'success');
+        } else {
+            showAdminError('Invalid password. Access denied.');
+            passwordInput.value = '';
+            
+            // Add delay to prevent brute force
+            setTimeout(() => {
+                passwordInput.disabled = false;
+            }, 2000);
+            passwordInput.disabled = true;
+        }
     }
 }
 
@@ -452,6 +512,30 @@ async function hashPassword(password) {
     const data = encoder.encode(password);
     const hash = await crypto.subtle.digest('SHA-256', data);
     return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Function to reset admin password (for debugging/recovery)
+function resetAdminPassword() {
+    if (confirm('Are you sure you want to reset the admin password? You will need to set a new one.')) {
+        localStorage.removeItem(ADMIN_PASSWORD_KEY);
+        adminPasswordSet = false;
+        isAdminLoggedIn = false;
+        
+        // Hide admin buttons
+        const exportButton = document.getElementById('exportButton');
+        const clearButton = document.getElementById('clearButton');
+        if (exportButton) exportButton.style.display = 'none';
+        if (clearButton) clearButton.style.display = 'none';
+        
+        showAlert('🔄 Admin password reset. You can now set a new password.', 'info');
+        console.log('Admin password has been reset. Type "admin" to show the admin button and set a new password.');
+    }
+}
+
+// Debug function to show admin button immediately (for testing)
+function showAdminButtonNow() {
+    showAdminButton();
+    console.log('Admin button shown for testing. You can now set up your password.');
 }
 
 function exportMessages() {
@@ -611,3 +695,5 @@ window.showAdminLogin = showAdminLogin;
 window.closeAdminLogin = closeAdminLogin;
 window.attemptAdminLogin = attemptAdminLogin;
 window.deleteMessage = deleteMessage;
+window.resetAdminPassword = resetAdminPassword;
+window.showAdminButtonNow = showAdminButtonNow;

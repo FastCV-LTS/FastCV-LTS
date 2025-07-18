@@ -8,8 +8,8 @@
     <meta http-equiv="Expires" content="0">
     <title>Contact | FastCV-LTS</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
-    <link rel="stylesheet" href="styles.css?v=20241227c">
-    <link rel="stylesheet" href="contact.css?v=20241227c">
+    <link rel="stylesheet" href="styles.css?v=20241227d">
+    <link rel="stylesheet" href="contact.css?v=20241227d">
 </head>
 <body>
     <!-- Header -->
@@ -73,12 +73,13 @@
                         <!-- Admin Login Modal -->
                         <div id="adminLoginModal" class="admin-modal" style="display: none;">
                             <div class="admin-modal-content">
-                                <h3>🔐 Admin Access</h3>
-                                <p>Enter admin password to access management features:</p>
+                                <h3 id="adminModalTitle">🔐 Admin Access</h3>
+                                <p id="adminModalText">Enter admin password to access management features:</p>
                                 <div class="admin-form">
                                     <input type="password" id="adminPassword" class="admin-input" placeholder="Enter password..." maxlength="50">
+                                    <input type="password" id="adminPasswordConfirm" class="admin-input" placeholder="Confirm password..." maxlength="50" style="display: none;">
                                     <div class="admin-buttons">
-                                        <button onclick="attemptAdminLogin()" class="admin-login-btn">Login</button>
+                                        <button onclick="attemptAdminLogin()" class="admin-login-btn" id="adminLoginButton">Login</button>
                                         <button onclick="closeAdminLogin()" class="admin-cancel-btn">Cancel</button>
                                     </div>
                                 </div>
@@ -154,7 +155,7 @@
         </div>
     </footer>
 
-    <script src="script.js?v=20241227c"></script>
-    <script src="contact.js?v=20241227c"></script>
+    <script src="script.js?v=20241227d"></script>
+    <script src="contact.js?v=20241227d"></script>
 </body>
 </html>
