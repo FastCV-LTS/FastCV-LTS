@@ -831,73 +831,234 @@ function saveResumeDataFile(data) {
 }
 
 // Function to handle resume file upload
-function handleResumeUpload(event) {
+async function handleResumeUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
     
     // Check file type
     const fileType = file.name.split('.').pop().toLowerCase();
-    if (!['json', 'txt'].includes(fileType)) {
-        alert('❌ Please upload a .json or .txt file from FastCV-LTS');
+    if (!['pdf', 'json', 'txt'].includes(fileType)) {
+        alert('❌ Please upload a PDF, JSON, or TXT file');
         return;
     }
     
-    // Read file
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            let resumeData;
-            
-            if (fileType === 'json') {
-                // Parse JSON file
-                const jsonData = JSON.parse(e.target.result);
-                
-                // Check if it's a FastCV-LTS file
-                if (jsonData.application === 'FastCV-LTS' && jsonData.data) {
-                    resumeData = jsonData.data;
-                } else {
-                    // Try to parse as direct data
-                    resumeData = jsonData;
-                }
-            } else {
-                // Handle text file (simple key-value format)
-                resumeData = parseTextResumeFile(e.target.result);
-            }
-            
-            if (resumeData) {
-                // Open in new tab with the data
-                openResumeInNewTab(resumeData);
-            } else {
-                alert('❌ Could not parse resume file. Please ensure it\'s a valid FastCV-LTS file.');
-            }
-            
-        } catch (error) {
-            console.error('Error parsing resume file:', error);
-            alert('❌ Error reading resume file. Please ensure it\'s a valid FastCV-LTS file.');
+    try {
+        let resumeData;
+        
+        if (fileType === 'pdf') {
+            // Handle PDF file
+            alert('📄 Processing PDF file... This may take a moment.');
+            resumeData = await parsePDFFile(file);
+        } else if (fileType === 'json') {
+            // Handle JSON file
+            resumeData = await parseJSONFile(file);
+        } else {
+            // Handle text file
+            resumeData = await parseTextFile(file);
         }
-    };
-    
-    reader.readAsText(file);
+        
+        if (resumeData) {
+            // Open in new tab with the data
+            openResumeInNewTab(resumeData);
+        } else {
+            alert('❌ Could not parse resume file. Please try a different file.');
+        }
+        
+    } catch (error) {
+        console.error('Error parsing resume file:', error);
+        alert('❌ Error reading resume file. Please try a different file.');
+    }
     
     // Reset file input
     event.target.value = '';
 }
 
-// Function to parse text resume file
-function parseTextResumeFile(textContent) {
-    // Simple parser for text-based resume files
-    // This is a basic implementation - can be enhanced based on format
-    const lines = textContent.split('\n');
+// Function to parse PDF file
+async function parsePDFFile(file) {
+    try {
+        // Set PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+        
+        let fullText = '';
+        
+        // Extract text from all pages
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map(item => item.str).join(' ');
+            fullText += pageText + '\n';
+        }
+        
+        // Parse the extracted text into resume data
+        return parseResumeText(fullText);
+        
+    } catch (error) {
+        console.error('Error parsing PDF:', error);
+        throw new Error('Failed to parse PDF file');
+    }
+}
+
+// Function to parse JSON file
+async function parseJSONFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const jsonData = JSON.parse(e.target.result);
+                
+                // Check if it's a FastCV-LTS file
+                if (jsonData.application === 'FastCV-LTS' && jsonData.data) {
+                    resolve(jsonData.data);
+                } else {
+                    // Try to parse as direct data
+                    resolve(jsonData);
+                }
+            } catch (error) {
+                reject(error);
+            }
+        };
+        reader.onerror = () => reject(new Error('Failed to read JSON file'));
+        reader.readAsText(file);
+    });
+}
+
+// Function to parse text file
+async function parseTextFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const resumeData = parseResumeText(e.target.result);
+                resolve(resumeData);
+            } catch (error) {
+                reject(error);
+            }
+        };
+        reader.onerror = () => reject(new Error('Failed to read text file'));
+        reader.readAsText(file);
+    });
+}
+
+// Function to parse resume text content (from PDF or text file)
+function parseResumeText(textContent) {
     const data = {};
+    const lines = textContent.split('\n').map(line => line.trim()).filter(line => line);
     
-    lines.forEach(line => {
-        if (line.includes(':')) {
-            const [key, value] = line.split(':').map(s => s.trim());
-            if (key && value) {
-                data[key.toLowerCase().replace(/\s+/g, '')] = value;
+    // Try to extract common resume fields using patterns
+    const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/;
+    const phoneRegex = /(\+?1?[-.\s]?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4})/;
+    const websiteRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/;
+    
+    let currentSection = '';
+    let experience = [];
+    let education = [];
+    let skills = [];
+    
+    // First pass - extract basic contact info
+    const fullText = textContent.toLowerCase();
+    
+    // Extract email
+    const emailMatch = textContent.match(emailRegex);
+    if (emailMatch) data.email = emailMatch[1];
+    
+    // Extract phone
+    const phoneMatch = textContent.match(phoneRegex);
+    if (phoneMatch) data.phone = phoneMatch[1];
+    
+    // Extract website
+    const websiteMatch = textContent.match(websiteRegex);
+    if (websiteMatch) data.website = websiteMatch[1];
+    
+    // Try to extract name (usually first line or after common headers)
+    for (let i = 0; i < Math.min(5, lines.length); i++) {
+        const line = lines[i];
+        if (line && !emailRegex.test(line) && !phoneRegex.test(line) && !websiteRegex.test(line)) {
+            // Skip common headers
+            if (!line.toLowerCase().includes('resume') && 
+                !line.toLowerCase().includes('cv') && 
+                !line.toLowerCase().includes('curriculum') &&
+                line.length > 5 && line.length < 50) {
+                data.fullName = line;
+                break;
             }
         }
-    });
+    }
+    
+    // Second pass - extract sections
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].toLowerCase();
+        
+        // Identify sections
+        if (line.includes('experience') || line.includes('employment') || line.includes('work history')) {
+            currentSection = 'experience';
+            continue;
+        } else if (line.includes('education') || line.includes('academic')) {
+            currentSection = 'education';
+            continue;
+        } else if (line.includes('skills') || line.includes('competencies')) {
+            currentSection = 'skills';
+            continue;
+        } else if (line.includes('summary') || line.includes('objective') || line.includes('profile')) {
+            currentSection = 'summary';
+            continue;
+        }
+        
+        // Extract content based on current section
+        const originalLine = lines[i];
+        if (originalLine && originalLine.length > 3) {
+            switch (currentSection) {
+                case 'experience':
+                    // Simple experience extraction
+                    if (originalLine.length > 10) {
+                        experience.push({
+                            title: originalLine.substring(0, 50),
+                            company: '',
+                            duration: '',
+                            description: originalLine
+                        });
+                    }
+                    break;
+                case 'education':
+                    if (originalLine.length > 5) {
+                        education.push({
+                            degree: originalLine.substring(0, 50),
+                            school: '',
+                            year: ''
+                        });
+                    }
+                    break;
+                case 'skills':
+                    skills.push(originalLine);
+                    break;
+                case 'summary':
+                    if (!data.summary) {
+                        data.summary = originalLine;
+                    } else {
+                        data.summary += ' ' + originalLine;
+                    }
+                    break;
+            }
+        }
+    }
+    
+    // Clean up and assign arrays
+    if (experience.length > 0) {
+        data.experience = experience.slice(0, 5); // Limit to 5 items
+    }
+    if (education.length > 0) {
+        data.education = education.slice(0, 3); // Limit to 3 items
+    }
+    if (skills.length > 0) {
+        data.skills = skills.join(', ');
+    }
+    
+    // Clean up summary
+    if (data.summary && data.summary.length > 500) {
+        data.summary = data.summary.substring(0, 500) + '...';
+    }
     
     return data;
 }

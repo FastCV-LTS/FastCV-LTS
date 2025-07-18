@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="builder.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -36,13 +37,13 @@
             <div class="upload-resume-section">
                 <div class="upload-card">
                     <h3>📂 Upload Existing Resume to Edit</h3>
-                    <p>Upload a previously downloaded FastCV-LTS resume file to continue editing</p>
-                    <input type="file" id="resumeUpload" accept=".json,.txt" class="upload-input" onchange="handleResumeUpload(event)">
+                    <p>Upload any PDF resume file to extract and edit its content, or use JSON/TXT files for perfect restoration</p>
+                    <input type="file" id="resumeUpload" accept=".pdf,.json,.txt" class="upload-input" onchange="handleResumeUpload(event)">
                     <label for="resumeUpload" class="upload-button">
                         <span class="upload-icon">📁</span>
                         Choose Resume File
                     </label>
-                    <small class="upload-note">Supports .json and .txt files from FastCV-LTS</small>
+                    <small class="upload-note">Supports PDF, JSON, and TXT files</small>
                 </div>
             </div>
             
