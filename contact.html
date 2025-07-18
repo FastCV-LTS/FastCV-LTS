@@ -6,6 +6,7 @@
     <title>Contact | FastCV-LTS</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="contact.css">
 </head>
 <body>
     <!-- Header -->
@@ -27,128 +28,86 @@
     <!-- Contact Section -->
     <section class="contact-section">
         <div class="container">
-            <h1 class="contact-title">Get In Touch</h1>
+            <h1 class="contact-title">💬 Community Messages</h1>
+            <p class="contact-subtitle">Share your thoughts, feedback, or questions with the FastCV-LTS community</p>
             
-            <div class="contact-content">
-                <!-- Contact Form -->
-                <div class="contact-form-container">
-                    <div class="contact-card">
-                        <h2>📧 Send Us a Message</h2>
-                        <form id="contactForm" class="contact-form" action="https://formspree.io/f/tbrownltstts@gmail.com" method="POST">
+            <div class="contact-layout">
+                <!-- Message Form -->
+                <div class="message-form-container">
+                    <div class="form-card">
+                        <h2>📝 Send a Message</h2>
+                        <form id="messageForm" class="message-form">
                             <div class="form-group">
-                                <label for="name">Your Name</label>
-                                <input type="text" id="name" name="name" class="retro-input" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="email">Email Address</label>
-                                <input type="email" id="email" name="email" class="retro-input" required>
+                                <label for="userName">Your Name</label>
+                                <input type="text" id="userName" class="retro-input" placeholder="Enter your name..." required maxlength="30">
+                                <small class="char-count">0/30</small>
                             </div>
                             
                             <div class="form-group">
-                                <label for="subject">Subject</label>
-                                <select id="subject" name="subject" class="retro-input">
-                                    <option value="General Inquiry">General Inquiry</option>
-                                    <option value="Bug Report">Bug Report</option>
-                                    <option value="Feature Request">Feature Request</option>
-                                    <option value="Need Help">Need Help</option>
-                                    <option value="Feedback">Feedback</option>
-                                </select>
+                                <label for="userMessage">Message</label>
+                                <textarea id="userMessage" class="retro-textarea" rows="4" placeholder="Share your thoughts, feedback, or questions..." required maxlength="300"></textarea>
+                                <small class="char-count">0/300</small>
                             </div>
                             
-                            <div class="form-group">
-                                <label for="message">Message</label>
-                                <textarea id="message" name="message" class="retro-textarea" rows="6" required placeholder="Tell us how we can help you..."></textarea>
-                            </div>
-                            
-                            <!-- Hidden field to identify the source -->
-                            <input type="hidden" name="_subject" value="FastCV-LTS Contact Form">
-                            <input type="hidden" name="_next" value="https://fastcv-lts.github.io/FastCV-LTS/contact.html?success=true">
-                            
-                            <button type="submit" class="cta-button">📤 Send Message</button>
-                            <div style="text-align: center; margin-top: 15px;">
-                                <small style="color: #666;">Or</small><br>
-                                <a href="#" onclick="sendEmailDirect()" class="secondary-btn" style="margin-top: 10px; display: inline-block;">📧 Open Email Client</a>
-                            </div>
+                            <button type="submit" class="send-button">
+                                <span class="button-icon">📤</span>
+                                Send Message
+                            </button>
                         </form>
+                        
+                        <!-- Warning System -->
+                        <div id="warningSystem" class="warning-system" style="display: none;">
+                            <div class="warning-content">
+                                <h3>⚠️ Content Warning</h3>
+                                <p id="warningMessage">Explicit content was detected. Please fix your comment.</p>
+                                <div class="warning-counter">
+                                    <span id="warningCount">Warnings: 0/3</span>
+                                </div>
+                                <button onclick="closeWarning()" class="warning-close">Got it</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Guidelines -->
+                        <div class="guidelines">
+                            <h3>📋 Community Guidelines</h3>
+                            <ul>
+                                <li>✅ Be respectful and professional</li>
+                                <li>✅ Share constructive feedback</li>
+                                <li>✅ Ask questions about FastCV-LTS</li>
+                                <li>❌ No explicit or inappropriate content</li>
+                                <li>❌ No spam or promotional content</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Contact Info -->
-                <div class="contact-info-container">
-                    <div class="contact-card">
-                        <h2>💬 Other Ways to Reach Us</h2>
-                        
-                        <div class="contact-method">
-                            <div class="contact-icon">📧</div>
-                            <div class="contact-details">
-                                <h3>Email</h3>
-                                <p><a href="mailto:tbrownltstts@gmail.com" class="email-link">tbrownltstts@gmail.com</a></p>
-                                <small>We'll respond within 24 hours</small>
+                <!-- Live Messages Display -->
+                <div class="messages-container">
+                    <div class="messages-card">
+                        <div class="messages-header">
+                            <h2>💭 Recent Messages</h2>
+                            <div class="message-stats">
+                                <span id="messageCount">0 messages</span>
+                                <button onclick="clearMessages()" class="clear-button">🗑️ Clear</button>
                             </div>
                         </div>
                         
-                        <div class="contact-method">
-                            <div class="contact-icon">🐛</div>
-                            <div class="contact-details">
-                                <h3>Bug Reports</h3>
-                                <p>Found a bug? Let us know!</p>
-                                <small>Help us improve FastCV-LTS</small>
+                        <div id="messagesDisplay" class="messages-display">
+                            <div class="welcome-message">
+                                <div class="message-bubble system">
+                                    <div class="message-header">
+                                        <span class="message-name">🤖 FastCV-LTS Bot</span>
+                                        <span class="message-time">Just now</span>
+                                    </div>
+                                    <div class="message-content">
+                                        Welcome to the FastCV-LTS community! Share your feedback, ask questions, or just say hello. All messages are temporary and reset when you refresh the page for privacy.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="contact-method">
-                            <div class="contact-icon">💡</div>
-                            <div class="contact-details">
-                                <h3>Feature Requests</h3>
-                                <p>Have an idea for a new feature?</p>
-                                <small>We love hearing from our users</small>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-method">
-                            <div class="contact-icon">❓</div>
-                            <div class="contact-details">
-                                <h3>Need Help?</h3>
-                                <p>Check our <a href="help.html" class="help-link">Help page</a> first</p>
-                                <small>Most questions are answered there</small>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- FAQ Quick Links -->
-                    <div class="contact-card">
-                        <h2>🔗 Quick Links</h2>
-                        <div class="quick-links">
-                            <a href="help.html#getting-started" class="quick-link">🚀 Getting Started</a>
-                            <a href="help.html#troubleshooting" class="quick-link">🔧 Troubleshooting</a>
-                            <a href="help.html#faq" class="quick-link">❓ FAQ</a>
-                            <a href="builder.html" class="quick-link">📄 Resume Builder</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Response Time Info -->
-            <div class="response-info">
-                <div class="info-card">
-                    <h3>⏰ Response Times</h3>
-                    <div class="response-grid">
-                        <div class="response-item">
-                            <strong>General Inquiries</strong>
-                            <span>24-48 hours</span>
-                        </div>
-                        <div class="response-item">
-                            <strong>Bug Reports</strong>
-                            <span>12-24 hours</span>
-                        </div>
-                        <div class="response-item">
-                            <strong>Feature Requests</strong>
-                            <span>2-5 days</span>
-                        </div>
-                        <div class="response-item">
-                            <strong>Help Requests</strong>
-                            <span>6-12 hours</span>
+                        <div class="messages-footer">
+                            <small>💡 Messages are temporary and reset on page refresh for privacy</small>
                         </div>
                     </div>
                 </div>
@@ -174,325 +133,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
-    
-    <style>
-        .contact-section {
-            padding: 40px 0;
-            min-height: 100vh;
-        }
-        
-        .contact-title {
-            text-align: center;
-            font-size: 48px;
-            color: #ff00ff;
-            text-shadow: 3px 3px 0px #00ffff;
-            margin-bottom: 40px;
-            animation: neonGlow 2s ease-in-out infinite alternate;
-        }
-        
-        .contact-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-        
-        .contact-card {
-            background: rgba(0, 0, 0, 0.8);
-            border: 4px solid #00ffff;
-            border-radius: 20px;
-            padding: 30px;
-            color: #fff;
-            margin-bottom: 20px;
-        }
-        
-        .contact-card h2 {
-            color: #ffff00;
-            font-size: 24px;
-            margin-bottom: 25px;
-            text-shadow: 2px 2px 0px #ff00ff;
-        }
-        
-        .contact-form .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .contact-form label {
-            display: block;
-            color: #00ffff;
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-        
-        .contact-form .retro-input,
-        .contact-form .retro-textarea {
-            width: 100%;
-            padding: 12px;
-            background: #000;
-            border: 2px solid #00ffff;
-            border-radius: 8px;
-            color: #fff;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-        
-        .contact-form .retro-input:focus,
-        .contact-form .retro-textarea:focus {
-            outline: none;
-            border-color: #ff00ff;
-            box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
-            background: rgba(255, 0, 255, 0.1);
-        }
-        
-        .contact-form select.retro-input {
-            cursor: pointer;
-        }
-        
-        .contact-form .retro-input::placeholder,
-        .contact-form .retro-textarea::placeholder {
-            color: #666;
-        }
-        
-        .contact-method {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            border: 1px solid #333;
-        }
-        
-        .contact-icon {
-            font-size: 24px;
-            min-width: 40px;
-        }
-        
-        .contact-details h3 {
-            color: #ff00ff;
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-        
-        .contact-details p {
-            color: #00ffff;
-            margin-bottom: 3px;
-        }
-        
-        .contact-details small {
-            color: #999;
-            font-size: 12px;
-        }
-        
-        .help-link {
-            color: #ffff00;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        .help-link:hover {
-            text-shadow: 1px 1px 0px #ff00ff;
-        }
-        
-        .email-link {
-            color: #00ffff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        .email-link:hover {
-            color: #ffff00;
-            text-shadow: 1px 1px 0px #ff00ff;
-        }
-        
-        .success-message {
-            background: rgba(0, 255, 0, 0.2);
-            border: 2px solid #00ff00;
-            color: #00ff00;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: bold;
-        }
-        
-        .secondary-btn {
-            background: linear-gradient(45deg, #666, #999);
-            color: #fff;
-            border: 2px solid #00ffff;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-family: 'Courier New', monospace;
-            text-decoration: none;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-        
-        .secondary-btn:hover {
-            background: linear-gradient(45deg, #999, #ccc);
-            color: #000;
-            transform: translateY(-2px);
-        }
-        
-        .quick-links {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .quick-link {
-            color: #00ffff;
-            text-decoration: none;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            border: 1px solid #333;
-            transition: all 0.3s ease;
-        }
-        
-        .quick-link:hover {
-            background: rgba(255, 0, 255, 0.2);
-            border-color: #ff00ff;
-            transform: translateX(5px);
-        }
-        
-        .response-info {
-            margin-top: 40px;
-        }
-        
-        .info-card {
-            background: rgba(255, 255, 255, 0.9);
-            border: 4px solid #ff00ff;
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .info-card h3 {
-            color: #ff00ff;
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 0px #000;
-        }
-        
-        .response-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        
-        .response-item {
-            background: #000;
-            color: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px solid #00ffff;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .response-item strong {
-            color: #ffff00;
-            font-size: 14px;
-        }
-        
-        .response-item span {
-            color: #00ffff;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        
-        @media (max-width: 768px) {
-            .contact-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .contact-title {
-                font-size: 32px;
-            }
-            
-            .response-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .contact-method {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-    </style>
-    
-    <script>
-        // Check for success parameter in URL
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('success') === 'true') {
-                // Show success message
-                const successDiv = document.createElement('div');
-                successDiv.className = 'success-message';
-                successDiv.innerHTML = '✅ Thank you for your message! We\'ll get back to you within 24 hours.';
-                
-                const contactTitle = document.querySelector('.contact-title');
-                contactTitle.parentNode.insertBefore(successDiv, contactTitle.nextSibling);
-                
-                // Remove success parameter from URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-        });
-        
-        // Handle form submission
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            // Get form data for validation
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-            
-            // Simple validation
-            if (!name || !email || !message) {
-                e.preventDefault();
-                alert('❌ Please fill in all required fields!');
-                return;
-            }
-            
-            // Show loading state
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = '📤 Sending...';
-            submitBtn.disabled = true;
-            
-            // Let the form submit naturally to Formspree
-            // The loading state will be reset when the page redirects back
-        });
-        
-        // Function to send email directly via mailto
-        function sendEmailDirect() {
-            const name = document.getElementById('name').value || 'Your Name';
-            const email = document.getElementById('email').value || 'your-email@example.com';
-            const subject = document.getElementById('subject').value || 'General Inquiry';
-            const message = document.getElementById('message').value || 'Your message here...';
-            
-            const emailSubject = `FastCV-LTS: ${subject}`;
-            const emailBody = `Hi FastCV-LTS Team,
-
-${message}
-
-Best regards,
-${name}
-${email}
-
----
-Sent from FastCV-LTS Contact Form`;
-            
-            const mailtoLink = `mailto:tbrownltstts@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-            window.location.href = mailtoLink;
-        }
-    </script>
+    <script src="script.js?v=2024"></script>
+    <script src="contact.js?v=2024"></script>
 </body>
 </html>
