@@ -1,6 +1,7 @@
 // Resume Builder JavaScript for FastCV-LTS
 
 let currentTemplate = 'classic';
+let currentPhoto = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize builder
@@ -69,7 +70,8 @@ function getFormData() {
         skills: document.getElementById('skills').value,
         certifications: document.getElementById('certifications').value,
         experience: getExperienceData(),
-        education: getEducationData()
+        education: getEducationData(),
+        photo: currentPhoto
     };
 }
 
@@ -122,22 +124,45 @@ function getEducationData() {
 function generateResumeHTML(data, template) {
     let html = '';
     
-    // Header
-    html += `<div class="resume-header">`;
-    if (data.fullName) {
-        html += `<div class="resume-name">${data.fullName}</div>`;
+    // Header with or without photo
+    if (data.photo) {
+        html += `<div class="resume-header-with-photo">`;
+        html += `<div class="resume-header-info">`;
+        if (data.fullName) {
+            html += `<div class="resume-name">${data.fullName}</div>`;
+        }
+        
+        let contactInfo = [];
+        if (data.email) contactInfo.push(data.email);
+        if (data.phone) contactInfo.push(data.phone);
+        if (data.address) contactInfo.push(data.address);
+        if (data.website) contactInfo.push(data.website);
+        
+        if (contactInfo.length > 0) {
+            html += `<div class="resume-contact">${contactInfo.join(' | ')}</div>`;
+        }
+        html += `</div>`;
+        html += `<div class="resume-header-photo">`;
+        html += `<img src="${data.photo}" alt="Profile Photo" class="resume-photo">`;
+        html += `</div>`;
+        html += `</div>`;
+    } else {
+        html += `<div class="resume-header">`;
+        if (data.fullName) {
+            html += `<div class="resume-name">${data.fullName}</div>`;
+        }
+        
+        let contactInfo = [];
+        if (data.email) contactInfo.push(data.email);
+        if (data.phone) contactInfo.push(data.phone);
+        if (data.address) contactInfo.push(data.address);
+        if (data.website) contactInfo.push(data.website);
+        
+        if (contactInfo.length > 0) {
+            html += `<div class="resume-contact">${contactInfo.join(' | ')}</div>`;
+        }
+        html += `</div>`;
     }
-    
-    let contactInfo = [];
-    if (data.email) contactInfo.push(data.email);
-    if (data.phone) contactInfo.push(data.phone);
-    if (data.address) contactInfo.push(data.address);
-    if (data.website) contactInfo.push(data.website);
-    
-    if (contactInfo.length > 0) {
-        html += `<div class="resume-contact">${contactInfo.join(' | ')}</div>`;
-    }
-    html += `</div>`;
     
     // Professional Summary
     if (data.summary) {
@@ -296,26 +321,72 @@ function downloadPDF() {
         const margin = 20;
         const contentWidth = pageWidth - (margin * 2);
         
-        // Header
-        if (data.fullName) {
-            doc.setFontSize(20);
-            doc.setFont('helvetica', 'bold');
-            doc.text(data.fullName, pageWidth / 2, yPosition, { align: 'center' });
-            yPosition += 10;
-        }
-        
-        // Contact Info
-        let contactInfo = [];
-        if (data.email) contactInfo.push(data.email);
-        if (data.phone) contactInfo.push(data.phone);
-        if (data.address) contactInfo.push(data.address);
-        if (data.website) contactInfo.push(data.website);
-        
-        if (contactInfo.length > 0) {
-            doc.setFontSize(10);
-            doc.setFont('helvetica', 'normal');
-            doc.text(contactInfo.join(' | '), pageWidth / 2, yPosition, { align: 'center' });
-            yPosition += 15;
+        // Header with or without photo
+        if (data.photo) {
+            // Add photo to PDF
+            try {
+                const photoSize = 25;
+                const photoX = pageWidth - margin - photoSize;
+                const photoY = yPosition - 5;
+                
+                doc.addImage(data.photo, 'JPEG', photoX, photoY, photoSize, photoSize);
+                
+                // Name and contact info (left side)
+                if (data.fullName) {
+                    doc.setFontSize(20);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text(data.fullName, margin, yPosition + 10);
+                    yPosition += 15;
+                }
+                
+                let contactInfo = [];
+                if (data.email) contactInfo.push(data.email);
+                if (data.phone) contactInfo.push(data.phone);
+                if (data.address) contactInfo.push(data.address);
+                if (data.website) contactInfo.push(data.website);
+                
+                if (contactInfo.length > 0) {
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text(contactInfo.join(' | '), margin, yPosition);
+                    yPosition += 15;
+                }
+                
+                // Ensure we're below the photo
+                yPosition = Math.max(yPosition, photoY + photoSize + 10);
+                
+            } catch (error) {
+                console.error('Error adding photo to PDF:', error);
+                // Fallback to regular header if photo fails
+                if (data.fullName) {
+                    doc.setFontSize(20);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text(data.fullName, pageWidth / 2, yPosition, { align: 'center' });
+                    yPosition += 10;
+                }
+            }
+        } else {
+            // Regular header without photo
+            if (data.fullName) {
+                doc.setFontSize(20);
+                doc.setFont('helvetica', 'bold');
+                doc.text(data.fullName, pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 10;
+            }
+            
+            // Contact Info
+            let contactInfo = [];
+            if (data.email) contactInfo.push(data.email);
+            if (data.phone) contactInfo.push(data.phone);
+            if (data.address) contactInfo.push(data.address);
+            if (data.website) contactInfo.push(data.website);
+            
+            if (contactInfo.length > 0) {
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.text(contactInfo.join(' | '), pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 15;
+            }
         }
         
         // Professional Summary
@@ -474,6 +545,9 @@ function clearAll() {
         document.querySelector('.template-card[data-template="classic"]').classList.add('active');
         currentTemplate = 'classic';
         
+        // Clear photo
+        removePhoto();
+        
         // Clear saved data
         localStorage.removeItem('fastcv_resume_data');
         
@@ -487,6 +561,7 @@ function clearAll() {
 function saveProgress() {
     const data = getFormData();
     data.template = currentTemplate;
+    data.photo = currentPhoto;
     
     try {
         localStorage.setItem('fastcv_resume_data', JSON.stringify(data));
@@ -520,6 +595,14 @@ function loadSavedData() {
                     card.classList.remove('active');
                 });
                 document.querySelector(`[data-template="${data.template}"]`).classList.add('active');
+            }
+            
+            // Load photo
+            if (data.photo) {
+                currentPhoto = data.photo;
+                const photoPreview = document.getElementById('photoPreview');
+                photoPreview.innerHTML = `<img src="${currentPhoto}" alt="Profile Photo">`;
+                document.getElementById('removePhotoBtn').style.display = 'block';
             }
             
             // Load experience data
@@ -568,4 +651,61 @@ function loadSavedData() {
     } catch (error) {
         console.error('Error loading saved data:', error);
     }
+}
+
+// Photo handling functions
+function handlePhotoUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        // Check file size (limit to 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('❌ Photo size must be less than 5MB');
+            return;
+        }
+        
+        // Check file type
+        if (!file.type.startsWith('image/')) {
+            alert('❌ Please select a valid image file');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            currentPhoto = e.target.result;
+            
+            // Update preview
+            const photoPreview = document.getElementById('photoPreview');
+            photoPreview.innerHTML = `<img src="${currentPhoto}" alt="Profile Photo">`;
+            
+            // Show remove button
+            document.getElementById('removePhotoBtn').style.display = 'block';
+            
+            // Update resume preview
+            updatePreview();
+        };
+        
+        reader.readAsDataURL(file);
+    }
+}
+
+function removePhoto() {
+    currentPhoto = null;
+    
+    // Reset file input
+    document.getElementById('photoUpload').value = '';
+    
+    // Reset preview
+    const photoPreview = document.getElementById('photoPreview');
+    photoPreview.innerHTML = `
+        <div class="photo-placeholder">
+            <span class="photo-icon">📷</span>
+            <span class="photo-text">Click to upload photo</span>
+        </div>
+    `;
+    
+    // Hide remove button
+    document.getElementById('removePhotoBtn').style.display = 'none';
+    
+    // Update resume preview
+    updatePreview();
 }

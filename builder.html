@@ -84,6 +84,21 @@
                             <input type="tel" id="phone" placeholder="Phone Number" class="retro-input">
                             <input type="text" id="address" placeholder="Address" class="retro-input">
                             <input type="url" id="website" placeholder="Website/LinkedIn (optional)" class="retro-input">
+                            
+                            <!-- Photo Upload -->
+                            <div class="photo-upload-section">
+                                <label for="photoUpload" class="photo-label">Profile Photo (Optional)</label>
+                                <div class="photo-upload-container">
+                                    <input type="file" id="photoUpload" accept="image/*" class="photo-input" onchange="handlePhotoUpload(event)">
+                                    <div class="photo-preview" id="photoPreview">
+                                        <div class="photo-placeholder">
+                                            <span class="photo-icon">📷</span>
+                                            <span class="photo-text">Click to upload photo</span>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="remove-photo-btn" id="removePhotoBtn" onclick="removePhoto()" style="display: none;">Remove Photo</button>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Professional Summary -->

@@ -388,6 +388,125 @@
     }
 }
 
+/* Photo Upload Styles */
+.photo-upload-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #333;
+}
+
+.photo-label {
+    display: block;
+    color: #00ffff;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.photo-upload-container {
+    position: relative;
+    text-align: center;
+}
+
+.photo-input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.photo-preview {
+    width: 150px;
+    height: 150px;
+    border: 3px dashed #00ffff;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.photo-preview:hover {
+    border-color: #ff00ff;
+    background: rgba(255, 0, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+}
+
+.photo-icon {
+    font-size: 32px;
+}
+
+.photo-text {
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+}
+
+.photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.remove-photo-btn {
+    background: #ff0000;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+}
+
+.remove-photo-btn:hover {
+    background: #cc0000;
+    transform: translateY(-2px);
+}
+
+/* Resume Photo Styles */
+.resume-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #333;
+    margin-bottom: 10px;
+}
+
+.resume-header-with-photo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.resume-header-info {
+    flex: 1;
+}
+
+.resume-header-photo {
+    flex-shrink: 0;
+}
+
 /* Custom Scrollbar for Form Container */
 .form-container::-webkit-scrollbar {
     width: 8px;
