@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🚀 FastCV-LTS
 
 <div align="center">
@@ -106,3 +107,21 @@ Have questions or suggestions? We'd love to hear from you!
 
 **Ready to revolutionize your job search?** 
 *FastCV-LTS is coming soon...*
+=======
+## Hi there 👋
+
+<!--
+**FastCV-LTS/FastCV-LTS** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+
+Here are some ideas to get you started:
+
+- 🔭 I’m currently working on ...
+- 🌱 I’m currently learning ...
+- 👯 I’m looking to collaborate on ...
+- 🤔 I’m looking for help with ...
+- 💬 Ask me about ...
+- 📫 How to reach me: ...
+- 😄 Pronouns: ...
+- ⚡ Fun fact: ...
+-->
+>>>>>>> 3127364df2abb82e6ce21828ebe5fab66702e0fe
