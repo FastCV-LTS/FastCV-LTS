@@ -34,7 +34,7 @@
                 <div class="contact-form-container">
                     <div class="contact-card">
                         <h2>📧 Send Us a Message</h2>
-                        <form id="contactForm" class="contact-form">
+                        <form id="contactForm" class="contact-form" action="https://formspree.io/f/tbrownltstts@gmail.com" method="POST">
                             <div class="form-group">
                                 <label for="name">Your Name</label>
                                 <input type="text" id="name" name="name" class="retro-input" required>
@@ -48,11 +48,11 @@
                             <div class="form-group">
                                 <label for="subject">Subject</label>
                                 <select id="subject" name="subject" class="retro-input">
-                                    <option value="general">General Inquiry</option>
-                                    <option value="bug">Bug Report</option>
-                                    <option value="feature">Feature Request</option>
-                                    <option value="help">Need Help</option>
-                                    <option value="feedback">Feedback</option>
+                                    <option value="General Inquiry">General Inquiry</option>
+                                    <option value="Bug Report">Bug Report</option>
+                                    <option value="Feature Request">Feature Request</option>
+                                    <option value="Need Help">Need Help</option>
+                                    <option value="Feedback">Feedback</option>
                                 </select>
                             </div>
                             
@@ -61,7 +61,15 @@
                                 <textarea id="message" name="message" class="retro-textarea" rows="6" required placeholder="Tell us how we can help you..."></textarea>
                             </div>
                             
+                            <!-- Hidden field to identify the source -->
+                            <input type="hidden" name="_subject" value="FastCV-LTS Contact Form">
+                            <input type="hidden" name="_next" value="https://fastcv-lts.github.io/FastCV-LTS/contact.html?success=true">
+                            
                             <button type="submit" class="cta-button">📤 Send Message</button>
+                            <div style="text-align: center; margin-top: 15px;">
+                                <small style="color: #666;">Or</small><br>
+                                <a href="#" onclick="sendEmailDirect()" class="secondary-btn" style="margin-top: 10px; display: inline-block;">📧 Open Email Client</a>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -75,7 +83,7 @@
                             <div class="contact-icon">📧</div>
                             <div class="contact-details">
                                 <h3>Email</h3>
-                                <p>contact@fastcv-lts.com</p>
+                                <p><a href="mailto:tbrownltstts@gmail.com" class="email-link">tbrownltstts@gmail.com</a></p>
                                 <small>We'll respond within 24 hours</small>
                             </div>
                         </div>
@@ -290,6 +298,48 @@
             text-shadow: 1px 1px 0px #ff00ff;
         }
         
+        .email-link {
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .email-link:hover {
+            color: #ffff00;
+            text-shadow: 1px 1px 0px #ff00ff;
+        }
+        
+        .success-message {
+            background: rgba(0, 255, 0, 0.2);
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .secondary-btn {
+            background: linear-gradient(45deg, #666, #999);
+            color: #fff;
+            border: 2px solid #00ffff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .secondary-btn:hover {
+            background: linear-gradient(45deg, #999, #ccc);
+            color: #000;
+            transform: translateY(-2px);
+        }
+        
         .quick-links {
             display: flex;
             flex-direction: column;
@@ -380,38 +430,69 @@
     </style>
     
     <script>
+        // Check for success parameter in URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('success') === 'true') {
+                // Show success message
+                const successDiv = document.createElement('div');
+                successDiv.className = 'success-message';
+                successDiv.innerHTML = '✅ Thank you for your message! We\'ll get back to you within 24 hours.';
+                
+                const contactTitle = document.querySelector('.contact-title');
+                contactTitle.parentNode.insertBefore(successDiv, contactTitle.nextSibling);
+                
+                // Remove success parameter from URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+        
+        // Handle form submission
         document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
+            // Get form data for validation
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
             
             // Simple validation
             if (!name || !email || !message) {
+                e.preventDefault();
                 alert('❌ Please fill in all required fields!');
                 return;
             }
             
-            // Simulate form submission
+            // Show loading state
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = '📤 Sending...';
             submitBtn.disabled = true;
             
-            setTimeout(() => {
-                alert('✅ Thank you for your message! We\'ll get back to you soon.\n\n(Note: This is a demo - no actual email was sent)');
-                
-                // Reset form
-                document.getElementById('contactForm').reset();
-                
-                // Reset button
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }, 2000);
+            // Let the form submit naturally to Formspree
+            // The loading state will be reset when the page redirects back
         });
+        
+        // Function to send email directly via mailto
+        function sendEmailDirect() {
+            const name = document.getElementById('name').value || 'Your Name';
+            const email = document.getElementById('email').value || 'your-email@example.com';
+            const subject = document.getElementById('subject').value || 'General Inquiry';
+            const message = document.getElementById('message').value || 'Your message here...';
+            
+            const emailSubject = `FastCV-LTS: ${subject}`;
+            const emailBody = `Hi FastCV-LTS Team,
+
+${message}
+
+Best regards,
+${name}
+${email}
+
+---
+Sent from FastCV-LTS Contact Form`;
+            
+            const mailtoLink = `mailto:tbrownltstts@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+            window.location.href = mailtoLink;
+        }
     </script>
 </body>
 </html>
