@@ -1,0 +1,408 @@
+/* Builder-specific CSS for FastCV-LTS */
+
+.builder-section {
+    padding: 40px 0;
+    min-height: 100vh;
+}
+
+.builder-title {
+    text-align: center;
+    font-size: 48px;
+    color: #ff00ff;
+    text-shadow: 3px 3px 0px #00ffff;
+    margin-bottom: 40px;
+    animation: neonGlow 2s ease-in-out infinite alternate;
+}
+
+/* Template Selection */
+.template-selection {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 30px;
+    border: 4px solid #00ffff;
+    border-radius: 20px;
+    margin-bottom: 30px;
+}
+
+.template-selection h2 {
+    color: #ffff00;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 0px #ff00ff;
+}
+
+.templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.template-card {
+    background: #000;
+    border: 3px solid #666;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.template-card:hover,
+.template-card.active {
+    border-color: #ff00ff;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(255, 0, 255, 0.5);
+}
+
+.template-preview {
+    width: 100%;
+    height: 120px;
+    background: #fff;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.template-preview.modern {
+    background: linear-gradient(45deg, #f0f0f0, #fff);
+}
+
+.template-preview.creative {
+    background: linear-gradient(135deg, #fff, #f8f8f8);
+}
+
+.template-header {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.template-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.template-lines .line {
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+}
+
+.template-lines .line.short {
+    width: 60%;
+}
+
+.template-lines .line.medium {
+    width: 80%;
+}
+
+.template-card h3 {
+    color: #00ffff;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Builder Interface */
+.builder-interface {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+/* Form Section */
+.form-section {
+    background: rgba(0, 0, 0, 0.8);
+    border: 4px solid #ff00ff;
+    border-radius: 20px;
+    padding: 30px;
+    height: fit-content;
+}
+
+.form-container {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+.form-group h3 {
+    color: #ffff00;
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 0px #000;
+    border-bottom: 2px solid #00ffff;
+    padding-bottom: 5px;
+}
+
+.retro-input,
+.retro-textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: #000;
+    border: 2px solid #00ffff;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.retro-input:focus,
+.retro-textarea:focus {
+    outline: none;
+    border-color: #ff00ff;
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+    background: rgba(255, 0, 255, 0.1);
+}
+
+.retro-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.retro-input::placeholder,
+.retro-textarea::placeholder {
+    color: #666;
+}
+
+/* Experience and Education Items */
+.experience-item,
+.education-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border: 2px solid #666;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff0000;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+}
+
+.remove-btn:hover {
+    background: #cc0000;
+}
+
+.add-btn {
+    background: linear-gradient(45deg, #00ff00, #00cc00);
+    color: #000;
+    border: 2px solid #ffff00;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+    background: linear-gradient(45deg, #ffff00, #00ff00);
+    transform: translateY(-2px);
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #00ffff;
+}
+
+.secondary-btn {
+    background: linear-gradient(45deg, #666, #999);
+    color: #fff;
+    border: 2px solid #00ffff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.secondary-btn:hover {
+    background: linear-gradient(45deg, #999, #ccc);
+    color: #000;
+    transform: translateY(-2px);
+}
+
+/* Preview Section */
+.preview-section {
+    background: rgba(255, 255, 255, 0.95);
+    border: 4px solid #00ffff;
+    border-radius: 20px;
+    padding: 30px;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.preview-section h3 {
+    color: #ff00ff;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 0px #000;
+}
+
+.resume-preview {
+    background: #fff;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 30px;
+    min-height: 600px;
+    font-family: Arial, sans-serif;
+    color: #333;
+    line-height: 1.4;
+}
+
+/* Resume Template Styles */
+.classic-template {
+    font-family: 'Times New Roman', serif;
+}
+
+.modern-template {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #fff, #f9f9f9);
+}
+
+.creative-template {
+    font-family: 'Helvetica', sans-serif;
+    border-left: 5px solid #ff00ff;
+}
+
+.resume-header {
+    text-align: center;
+    border-bottom: 2px solid #333;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.resume-name {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.resume-contact {
+    font-size: 14px;
+    color: #666;
+}
+
+.resume-section {
+    margin-bottom: 20px;
+}
+
+.resume-section h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.resume-item {
+    margin-bottom: 15px;
+}
+
+.resume-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.resume-item-title {
+    font-weight: bold;
+    color: #333;
+}
+
+.resume-item-company {
+    font-style: italic;
+    color: #666;
+}
+
+.resume-item-date {
+    color: #666;
+    font-size: 14px;
+}
+
+.resume-item-description {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .builder-interface {
+        grid-template-columns: 1fr;
+    }
+    
+    .preview-section {
+        position: static;
+        max-height: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .templates-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .builder-title {
+        font-size: 32px;
+    }
+}
+
+/* Custom Scrollbar for Form Container */
+.form-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.form-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.form-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #ff00ff, #00ffff);
+    border-radius: 4px;
+}
+
+.form-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #ffff00, #ff00ff);
+}

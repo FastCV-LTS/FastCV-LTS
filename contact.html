@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | FastCV-LTS</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">📄</span>
+                <span class="logo-text">FastCV-LTS</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="builder.html" class="nav-link">Builder</a>
+                <a href="help.html" class="nav-link">Help</a>
+                <a href="contact.html" class="nav-link active">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <h1 class="contact-title">Get In Touch</h1>
+            
+            <div class="contact-content">
+                <!-- Contact Form -->
+                <div class="contact-form-container">
+                    <div class="contact-card">
+                        <h2>📧 Send Us a Message</h2>
+                        <form id="contactForm" class="contact-form">
+                            <div class="form-group">
+                                <label for="name">Your Name</label>
+                                <input type="text" id="name" name="name" class="retro-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" class="retro-input" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <select id="subject" name="subject" class="retro-input">
+                                    <option value="general">General Inquiry</option>
+                                    <option value="bug">Bug Report</option>
+                                    <option value="feature">Feature Request</option>
+                                    <option value="help">Need Help</option>
+                                    <option value="feedback">Feedback</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" class="retro-textarea" rows="6" required placeholder="Tell us how we can help you..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="cta-button">📤 Send Message</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Contact Info -->
+                <div class="contact-info-container">
+                    <div class="contact-card">
+                        <h2>💬 Other Ways to Reach Us</h2>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">📧</div>
+                            <div class="contact-details">
+                                <h3>Email</h3>
+                                <p>contact@fastcv-lts.com</p>
+                                <small>We'll respond within 24 hours</small>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">🐛</div>
+                            <div class="contact-details">
+                                <h3>Bug Reports</h3>
+                                <p>Found a bug? Let us know!</p>
+                                <small>Help us improve FastCV-LTS</small>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">💡</div>
+                            <div class="contact-details">
+                                <h3>Feature Requests</h3>
+                                <p>Have an idea for a new feature?</p>
+                                <small>We love hearing from our users</small>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">❓</div>
+                            <div class="contact-details">
+                                <h3>Need Help?</h3>
+                                <p>Check our <a href="help.html" class="help-link">Help page</a> first</p>
+                                <small>Most questions are answered there</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ Quick Links -->
+                    <div class="contact-card">
+                        <h2>🔗 Quick Links</h2>
+                        <div class="quick-links">
+                            <a href="help.html#getting-started" class="quick-link">🚀 Getting Started</a>
+                            <a href="help.html#troubleshooting" class="quick-link">🔧 Troubleshooting</a>
+                            <a href="help.html#faq" class="quick-link">❓ FAQ</a>
+                            <a href="builder.html" class="quick-link">📄 Resume Builder</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Response Time Info -->
+            <div class="response-info">
+                <div class="info-card">
+                    <h3>⏰ Response Times</h3>
+                    <div class="response-grid">
+                        <div class="response-item">
+                            <strong>General Inquiries</strong>
+                            <span>24-48 hours</span>
+                        </div>
+                        <div class="response-item">
+                            <strong>Bug Reports</strong>
+                            <span>12-24 hours</span>
+                        </div>
+                        <div class="response-item">
+                            <strong>Feature Requests</strong>
+                            <span>2-5 days</span>
+                        </div>
+                        <div class="response-item">
+                            <strong>Help Requests</strong>
+                            <span>6-12 hours</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="help.html">Help</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="#" onclick="alert('Terms coming soon!')">Terms</a>
+                    <a href="#" onclick="alert('Privacy Policy coming soon!')">Privacy Policy</a>
+                </div>
+                <div class="footer-text">
+                    <p>&copy; 2024 FastCV-LTS. Made with ❤️ for job seekers.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    
+    <style>
+        .contact-section {
+            padding: 40px 0;
+            min-height: 100vh;
+        }
+        
+        .contact-title {
+            text-align: center;
+            font-size: 48px;
+            color: #ff00ff;
+            text-shadow: 3px 3px 0px #00ffff;
+            margin-bottom: 40px;
+            animation: neonGlow 2s ease-in-out infinite alternate;
+        }
+        
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .contact-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 4px solid #00ffff;
+            border-radius: 20px;
+            padding: 30px;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        
+        .contact-card h2 {
+            color: #ffff00;
+            font-size: 24px;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 0px #ff00ff;
+        }
+        
+        .contact-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .contact-form label {
+            display: block;
+            color: #00ffff;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .contact-form .retro-input,
+        .contact-form .retro-textarea {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-form .retro-input:focus,
+        .contact-form .retro-textarea:focus {
+            outline: none;
+            border-color: #ff00ff;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+            background: rgba(255, 0, 255, 0.1);
+        }
+        
+        .contact-form select.retro-input {
+            cursor: pointer;
+        }
+        
+        .contact-form .retro-input::placeholder,
+        .contact-form .retro-textarea::placeholder {
+            color: #666;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+        
+        .contact-icon {
+            font-size: 24px;
+            min-width: 40px;
+        }
+        
+        .contact-details h3 {
+            color: #ff00ff;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .contact-details p {
+            color: #00ffff;
+            margin-bottom: 3px;
+        }
+        
+        .contact-details small {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .help-link {
+            color: #ffff00;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .help-link:hover {
+            text-shadow: 1px 1px 0px #ff00ff;
+        }
+        
+        .quick-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .quick-link {
+            color: #00ffff;
+            text-decoration: none;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-link:hover {
+            background: rgba(255, 0, 255, 0.2);
+            border-color: #ff00ff;
+            transform: translateX(5px);
+        }
+        
+        .response-info {
+            margin-top: 40px;
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 4px solid #ff00ff;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .info-card h3 {
+            color: #ff00ff;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 0px #000;
+        }
+        
+        .response-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .response-item {
+            background: #000;
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #00ffff;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .response-item strong {
+            color: #ffff00;
+            font-size: 14px;
+        }
+        
+        .response-item span {
+            color: #00ffff;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-title {
+                font-size: 32px;
+            }
+            
+            .response-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-method {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+    
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Simple validation
+            if (!name || !email || !message) {
+                alert('❌ Please fill in all required fields!');
+                return;
+            }
+            
+            // Simulate form submission
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '📤 Sending...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                alert('✅ Thank you for your message! We\'ll get back to you soon.\n\n(Note: This is a demo - no actual email was sent)');
+                
+                // Reset form
+                document.getElementById('contactForm').reset();
+                
+                // Reset button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
