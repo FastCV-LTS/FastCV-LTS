@@ -191,6 +191,143 @@
     75% { transform: translateX(10px); }
 }
 
+/* Admin Modal Styles */
+.admin-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-modal-content {
+    background: rgba(0, 0, 0, 0.95);
+    border: 4px solid #ff0000;
+    border-radius: 20px;
+    padding: 30px;
+    color: #fff;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    animation: slideIn 0.3s ease-out;
+}
+
+.admin-modal-content h3 {
+    color: #ff0000;
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 0px #000;
+}
+
+.admin-modal-content p {
+    color: #00ffff;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.admin-form {
+    margin-bottom: 20px;
+}
+
+.admin-input {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.admin-input:focus {
+    outline: none;
+    border-color: #ffff00;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+    background: rgba(255, 255, 0, 0.1);
+}
+
+.admin-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.admin-login-btn {
+    background: linear-gradient(45deg, #00ff00, #00cc00);
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.admin-login-btn:hover {
+    background: linear-gradient(45deg, #00cc00, #ffff00);
+    transform: translateY(-2px);
+}
+
+.admin-cancel-btn {
+    background: linear-gradient(45deg, #666, #999);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.admin-cancel-btn:hover {
+    background: linear-gradient(45deg, #999, #ccc);
+    color: #000;
+    transform: translateY(-2px);
+}
+
+.admin-error {
+    background: rgba(255, 0, 0, 0.2);
+    border: 2px solid #ff0000;
+    color: #ff0000;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-top: 15px;
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Delete button for individual messages */
+.message-delete {
+    background: linear-gradient(45deg, #ff0000, #cc0000);
+    color: #fff;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 10px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.message-delete:hover {
+    background: linear-gradient(45deg, #cc0000, #ff6600);
+    transform: scale(1.1);
+}
+
 /* Guidelines */
 .guidelines {
     margin-top: 30px;
@@ -251,6 +388,24 @@
     gap: 15px;
     font-size: 14px;
     color: #00ffff;
+}
+
+.admin-button {
+    background: linear-gradient(45deg, #ff0000, #cc0000);
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+    margin-right: 5px;
+}
+
+.admin-button:hover {
+    background: linear-gradient(45deg, #cc0000, #ff6600);
+    color: #fff;
 }
 
 .export-button {

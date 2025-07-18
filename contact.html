@@ -8,8 +8,8 @@
     <meta http-equiv="Expires" content="0">
     <title>Contact | FastCV-LTS</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
-    <link rel="stylesheet" href="styles.css?v=20241227b">
-    <link rel="stylesheet" href="contact.css?v=20241227b">
+    <link rel="stylesheet" href="styles.css?v=20241227c">
+    <link rel="stylesheet" href="contact.css?v=20241227c">
 </head>
 <body>
     <!-- Header -->
@@ -70,6 +70,22 @@
                             </div>
                         </div>
                         
+                        <!-- Admin Login Modal -->
+                        <div id="adminLoginModal" class="admin-modal" style="display: none;">
+                            <div class="admin-modal-content">
+                                <h3>🔐 Admin Access</h3>
+                                <p>Enter admin password to access management features:</p>
+                                <div class="admin-form">
+                                    <input type="password" id="adminPassword" class="admin-input" placeholder="Enter password..." maxlength="50">
+                                    <div class="admin-buttons">
+                                        <button onclick="attemptAdminLogin()" class="admin-login-btn">Login</button>
+                                        <button onclick="closeAdminLogin()" class="admin-cancel-btn">Cancel</button>
+                                    </div>
+                                </div>
+                                <div id="adminError" class="admin-error" style="display: none;"></div>
+                            </div>
+                        </div>
+                        
                         <!-- Guidelines -->
                         <div class="guidelines">
                             <h3>📋 Community Guidelines</h3>
@@ -91,8 +107,9 @@
                             <h2>💭 Recent Messages</h2>
                             <div class="message-stats">
                                 <span id="messageCount">0 messages</span>
-                                <button onclick="exportMessages()" class="export-button">📥 Export</button>
-                                <button onclick="clearMessages()" class="clear-button">🗑️ Clear</button>
+                                <button id="adminButton" onclick="showAdminLogin()" class="admin-button" style="display: none;">🔐 Admin</button>
+                                <button id="exportButton" onclick="exportMessages()" class="export-button" style="display: none;">📥 Export</button>
+                                <button id="clearButton" onclick="clearMessages()" class="clear-button" style="display: none;">🗑️ Clear</button>
                             </div>
                         </div>
                         
@@ -137,7 +154,7 @@
         </div>
     </footer>
 
-    <script src="script.js?v=20241227b"></script>
-    <script src="contact.js?v=20241227b"></script>
+    <script src="script.js?v=20241227c"></script>
+    <script src="contact.js?v=20241227c"></script>
 </body>
 </html>
