@@ -294,7 +294,7 @@ function removeEducation(button) {
     updatePreview();
 }
 
-function downloadPDF() {
+async function downloadPDF() {
     const data = getFormData();
     
     // Check if user has entered basic information
@@ -328,28 +328,12 @@ function downloadPDF() {
                 const photoSize = 25;
                 const photoX = pageWidth - margin - photoSize;
                 const photoY = yPosition - 5;
-                const centerX = photoX + photoSize / 2;
-                const centerY = photoY + photoSize / 2;
-                const radius = photoSize / 2;
                 
-                // Save the current graphics state
-                doc.saveGraphicsState();
+                // Create circular photo using canvas
+                const circularPhoto = await createCircularPhoto(data.photo, photoSize * 4); // Higher resolution
                 
-                // Create circular clipping path
-                doc.circle(centerX, centerY, radius);
-                doc.clip();
-                
-                // Add the image (it will be clipped to the circle)
-                doc.addImage(data.photo, 'JPEG', photoX, photoY, photoSize, photoSize);
-                
-                // Restore graphics state to remove clipping
-                doc.restoreGraphicsState();
-                
-                // Add circular border
-                doc.setDrawColor(0, 0, 0); // Black border
-                doc.setLineWidth(0.5);
-                doc.circle(centerX, centerY, radius);
-                doc.stroke();
+                // Add the circular photo to PDF
+                doc.addImage(circularPhoto, 'PNG', photoX, photoY, photoSize, photoSize);
                 
                 // Name and contact info (left side)
                 if (data.fullName) {
@@ -728,4 +712,60 @@ function removePhoto() {
     
     // Update resume preview
     updatePreview();
+}
+
+// Function to create circular photo using canvas
+function createCircularPhoto(photoDataUrl, size) {
+    return new Promise((resolve) => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = size;
+        canvas.height = size;
+        
+        const img = new Image();
+        img.onload = function() {
+            // Clear canvas with transparent background
+            ctx.clearRect(0, 0, size, size);
+            
+            // Create circular clipping path
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.clip();
+            
+            // Calculate dimensions to maintain aspect ratio and fill circle
+            const imgAspect = img.width / img.height;
+            let drawWidth, drawHeight, drawX, drawY;
+            
+            if (imgAspect > 1) {
+                // Image is wider than tall
+                drawHeight = size;
+                drawWidth = size * imgAspect;
+                drawX = -(drawWidth - size) / 2;
+                drawY = 0;
+            } else {
+                // Image is taller than wide
+                drawWidth = size;
+                drawHeight = size / imgAspect;
+                drawX = 0;
+                drawY = -(drawHeight - size) / 2;
+            }
+            
+            // Draw the image
+            ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+            
+            // Add a subtle border
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size / 2 - 1, 0, Math.PI * 2);
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Convert to data URL
+            resolve(canvas.toDataURL('image/png'));
+        };
+        
+        img.src = photoDataUrl;
+    });
 }
