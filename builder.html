@@ -32,6 +32,20 @@
         <div class="container">
             <h1 class="builder-title">Resume Builder</h1>
             
+            <!-- Resume Upload Section -->
+            <div class="upload-resume-section">
+                <div class="upload-card">
+                    <h3>📂 Upload Existing Resume to Edit</h3>
+                    <p>Upload a previously downloaded FastCV-LTS resume file to continue editing</p>
+                    <input type="file" id="resumeUpload" accept=".json,.txt" class="upload-input" onchange="handleResumeUpload(event)">
+                    <label for="resumeUpload" class="upload-button">
+                        <span class="upload-icon">📁</span>
+                        Choose Resume File
+                    </label>
+                    <small class="upload-note">Supports .json and .txt files from FastCV-LTS</small>
+                </div>
+            </div>
+            
             <!-- Template Selection -->
             <div class="template-selection">
                 <h2>Choose Your Template</h2>

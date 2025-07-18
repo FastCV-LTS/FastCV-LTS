@@ -10,8 +10,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add event listeners for real-time preview
     addFormListeners();
     
-    // Load saved data if exists
-    loadSavedData();
+    // Check for resume data in URL (from upload)
+    loadResumeFromURL();
+    
+    // Load saved data if exists (if no URL data)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.get('resumeData')) {
+        loadSavedData();
+    }
     
     // Update preview initially
     updatePreview();
@@ -512,8 +518,11 @@ async function downloadPDF() {
         const fileName = data.fullName ? `${data.fullName.replace(/\s+/g, '_')}_Resume.pdf` : 'My_Resume.pdf';
         doc.save(fileName);
         
+        // Also save resume data as JSON for future editing
+        saveResumeDataFile(data);
+        
         // Show success message
-        alert('✅ PDF downloaded successfully!');
+        alert('✅ PDF downloaded successfully! A resume data file has also been saved for future editing.');
         
     } catch (error) {
         console.error('Error generating PDF:', error);
@@ -785,4 +794,251 @@ function createCircularPhotoAsync(photoDataUrl, size) {
         
         img.src = photoDataUrl;
     });
+}
+
+// Function to save resume data as downloadable JSON file
+function saveResumeDataFile(data) {
+    try {
+        // Create resume data object with metadata
+        const resumeData = {
+            version: "1.0",
+            created: new Date().toISOString(),
+            application: "FastCV-LTS",
+            data: data
+        };
+        
+        // Convert to JSON string
+        const jsonString = JSON.stringify(resumeData, null, 2);
+        
+        // Create blob and download
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        // Create download link
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = data.fullName ? `${data.fullName.replace(/\s+/g, '_')}_Resume_Data.json` : 'My_Resume_Data.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        // Clean up
+        URL.revokeObjectURL(url);
+        
+    } catch (error) {
+        console.error('Error saving resume data file:', error);
+    }
+}
+
+// Function to handle resume file upload
+function handleResumeUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Check file type
+    const fileType = file.name.split('.').pop().toLowerCase();
+    if (!['json', 'txt'].includes(fileType)) {
+        alert('❌ Please upload a .json or .txt file from FastCV-LTS');
+        return;
+    }
+    
+    // Read file
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            let resumeData;
+            
+            if (fileType === 'json') {
+                // Parse JSON file
+                const jsonData = JSON.parse(e.target.result);
+                
+                // Check if it's a FastCV-LTS file
+                if (jsonData.application === 'FastCV-LTS' && jsonData.data) {
+                    resumeData = jsonData.data;
+                } else {
+                    // Try to parse as direct data
+                    resumeData = jsonData;
+                }
+            } else {
+                // Handle text file (simple key-value format)
+                resumeData = parseTextResumeFile(e.target.result);
+            }
+            
+            if (resumeData) {
+                // Open in new tab with the data
+                openResumeInNewTab(resumeData);
+            } else {
+                alert('❌ Could not parse resume file. Please ensure it\'s a valid FastCV-LTS file.');
+            }
+            
+        } catch (error) {
+            console.error('Error parsing resume file:', error);
+            alert('❌ Error reading resume file. Please ensure it\'s a valid FastCV-LTS file.');
+        }
+    };
+    
+    reader.readAsText(file);
+    
+    // Reset file input
+    event.target.value = '';
+}
+
+// Function to parse text resume file
+function parseTextResumeFile(textContent) {
+    // Simple parser for text-based resume files
+    // This is a basic implementation - can be enhanced based on format
+    const lines = textContent.split('\n');
+    const data = {};
+    
+    lines.forEach(line => {
+        if (line.includes(':')) {
+            const [key, value] = line.split(':').map(s => s.trim());
+            if (key && value) {
+                data[key.toLowerCase().replace(/\s+/g, '')] = value;
+            }
+        }
+    });
+    
+    return data;
+}
+
+// Function to open resume in new tab with data
+function openResumeInNewTab(resumeData) {
+    try {
+        // Create URL with resume data as parameter
+        const dataString = encodeURIComponent(JSON.stringify(resumeData));
+        const newTabUrl = `${window.location.origin}${window.location.pathname}?resumeData=${dataString}`;
+        
+        // Open in new tab
+        const newTab = window.open(newTabUrl, '_blank');
+        
+        if (newTab) {
+            alert('✅ Resume opened in new tab for editing!');
+        } else {
+            alert('❌ Please allow popups to open resume in new tab');
+        }
+        
+    } catch (error) {
+        console.error('Error opening resume in new tab:', error);
+        alert('❌ Error opening resume in new tab');
+    }
+}
+
+// Function to load resume data from URL parameter
+function loadResumeFromURL() {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const resumeDataParam = urlParams.get('resumeData');
+        
+        if (resumeDataParam) {
+            const resumeData = JSON.parse(decodeURIComponent(resumeDataParam));
+            
+            // Load the data into the form
+            loadResumeData(resumeData);
+            
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+            
+            // Show success message
+            setTimeout(() => {
+                alert('✅ Resume loaded successfully! You can now edit and download.');
+            }, 500);
+        }
+    } catch (error) {
+        console.error('Error loading resume from URL:', error);
+    }
+}
+
+// Function to load resume data into form
+function loadResumeData(data) {
+    try {
+        // Load basic fields
+        if (data.fullName) document.getElementById('fullName').value = data.fullName;
+        if (data.email) document.getElementById('email').value = data.email;
+        if (data.phone) document.getElementById('phone').value = data.phone;
+        if (data.address) document.getElementById('address').value = data.address;
+        if (data.website) document.getElementById('website').value = data.website;
+        if (data.summary) document.getElementById('summary').value = data.summary;
+        if (data.skills) document.getElementById('skills').value = data.skills;
+        if (data.certifications) document.getElementById('certifications').value = data.certifications;
+        
+        // Load template
+        if (data.template) {
+            currentTemplate = data.template;
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            const templateCard = document.querySelector(`[data-template="${data.template}"]`);
+            if (templateCard) {
+                templateCard.classList.add('active');
+            }
+        }
+        
+        // Load photo
+        if (data.photo) {
+            currentPhoto = data.photo;
+            const photoPreview = document.getElementById('photoPreview');
+            if (photoPreview) {
+                photoPreview.innerHTML = `<img src="${currentPhoto}" alt="Profile Photo">`;
+                const removeBtn = document.getElementById('removePhotoBtn');
+                if (removeBtn) {
+                    removeBtn.style.display = 'block';
+                }
+            }
+        }
+        
+        // Load experience data
+        if (data.experience && data.experience.length > 0) {
+            const container = document.getElementById('experienceContainer');
+            if (container) {
+                // Clear existing experience items
+                container.innerHTML = '';
+                
+                // Add each experience
+                data.experience.forEach(exp => {
+                    addExperience();
+                    const items = container.querySelectorAll('.experience-item');
+                    const lastItem = items[items.length - 1];
+                    
+                    if (lastItem) {
+                        const inputs = lastItem.querySelectorAll('input, textarea');
+                        if (inputs[0]) inputs[0].value = exp.title || '';
+                        if (inputs[1]) inputs[1].value = exp.company || '';
+                        if (inputs[2]) inputs[2].value = exp.duration || '';
+                        if (inputs[3]) inputs[3].value = exp.description || '';
+                    }
+                });
+            }
+        }
+        
+        // Load education data
+        if (data.education && data.education.length > 0) {
+            const container = document.getElementById('educationContainer');
+            if (container) {
+                // Clear existing education items
+                container.innerHTML = '';
+                
+                // Add each education
+                data.education.forEach(edu => {
+                    addEducation();
+                    const items = container.querySelectorAll('.education-item');
+                    const lastItem = items[items.length - 1];
+                    
+                    if (lastItem) {
+                        const inputs = lastItem.querySelectorAll('input');
+                        if (inputs[0]) inputs[0].value = edu.degree || '';
+                        if (inputs[1]) inputs[1].value = edu.school || '';
+                        if (inputs[2]) inputs[2].value = edu.year || '';
+                    }
+                });
+            }
+        }
+        
+        // Update preview
+        updatePreview();
+        
+    } catch (error) {
+        console.error('Error loading resume data:', error);
+        alert('❌ Error loading resume data');
+    }
 }
