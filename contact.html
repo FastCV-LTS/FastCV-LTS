@@ -8,8 +8,8 @@
     <meta http-equiv="Expires" content="0">
     <title>Contact | FastCV-LTS</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
-    <link rel="stylesheet" href="styles.css?v=20241227">
-    <link rel="stylesheet" href="contact.css?v=20241227">
+    <link rel="stylesheet" href="styles.css?v=20241227b">
+    <link rel="stylesheet" href="contact.css?v=20241227b">
 </head>
 <body>
     <!-- Header -->
@@ -91,6 +91,7 @@
                             <h2>💭 Recent Messages</h2>
                             <div class="message-stats">
                                 <span id="messageCount">0 messages</span>
+                                <button onclick="exportMessages()" class="export-button">📥 Export</button>
                                 <button onclick="clearMessages()" class="clear-button">🗑️ Clear</button>
                             </div>
                         </div>
@@ -103,14 +104,14 @@
                                         <span class="message-time">Just now</span>
                                     </div>
                                     <div class="message-content">
-                                        Welcome to the FastCV-LTS community! Share your feedback, ask questions, or just say hello. All messages are temporary and reset when you refresh the page for privacy.
+                                        Welcome to the FastCV-LTS community! Share your feedback, ask questions, or just say hello. All messages are saved locally so you can see the conversation history.
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="messages-footer">
-                            <small>💡 Messages are temporary and reset on page refresh for privacy</small>
+                            <small>💾 Messages are saved locally and persist between visits</small>
                         </div>
                     </div>
                 </div>
@@ -136,7 +137,7 @@
         </div>
     </footer>
 
-    <script src="script.js?v=20241227"></script>
-    <script src="contact.js?v=20241227"></script>
+    <script src="script.js?v=20241227b"></script>
+    <script src="contact.js?v=20241227b"></script>
 </body>
 </html>

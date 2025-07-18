@@ -253,6 +253,24 @@
     color: #00ffff;
 }
 
+.export-button {
+    background: linear-gradient(45deg, #00ff00, #00cc00);
+    color: #000;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+    margin-right: 5px;
+}
+
+.export-button:hover {
+    background: linear-gradient(45deg, #00cc00, #ffff00);
+    color: #000;
+}
+
 .clear-button {
     background: linear-gradient(45deg, #ff0000, #ff6600);
     color: #fff;

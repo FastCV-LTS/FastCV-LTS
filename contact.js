@@ -2,6 +2,7 @@
 let messages = [];
 let warningCount = 0;
 const MAX_WARNINGS = 3;
+const STORAGE_KEY = 'fastcv_messages';
 
 // Comprehensive bad words filter
 const badWords = [
@@ -27,13 +28,37 @@ const badWords = [
 document.addEventListener('DOMContentLoaded', function() {
     initializeContactPage();
     setupEventListeners();
+    loadMessages();
     updateMessageCount();
 });
 
 function initializeContactPage() {
-    // Add welcome message
-    const welcomeTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     console.log('Contact page initialized');
+}
+
+function loadMessages() {
+    try {
+        const savedMessages = localStorage.getItem(STORAGE_KEY);
+        if (savedMessages) {
+            messages = JSON.parse(savedMessages);
+            // Convert timestamp strings back to Date objects
+            messages.forEach(msg => {
+                msg.timestamp = new Date(msg.timestamp);
+            });
+            renderMessages();
+        }
+    } catch (error) {
+        console.error('Error loading messages:', error);
+        messages = [];
+    }
+}
+
+function saveMessages() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    } catch (error) {
+        console.error('Error saving messages:', error);
+    }
 }
 
 function setupEventListeners() {
@@ -230,10 +255,13 @@ function addMessage(name, message) {
     
     messages.unshift(messageObj); // Add to beginning
     
-    // Limit to 50 messages
-    if (messages.length > 50) {
-        messages = messages.slice(0, 50);
+    // Limit to 100 messages (increased from 50)
+    if (messages.length > 100) {
+        messages = messages.slice(0, 100);
     }
+    
+    // Save to localStorage
+    saveMessages();
     
     renderMessages();
     updateMessageCount();
@@ -291,12 +319,50 @@ function updateMessageCount() {
     }
 }
 
+function exportMessages() {
+    if (messages.length === 0) {
+        showAlert('📭 No messages to export!', 'info');
+        return;
+    }
+    
+    // Create export data
+    const exportData = {
+        exportDate: new Date().toISOString(),
+        totalMessages: messages.length,
+        messages: messages.map(msg => ({
+            id: msg.id,
+            name: msg.name,
+            message: msg.message,
+            timestamp: msg.timestamp.toISOString(),
+            formattedTime: msg.timestamp.toLocaleString()
+        }))
+    };
+    
+    // Create downloadable file
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    
+    // Create download link
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = `fastcv-messages-${new Date().toISOString().split('T')[0]}.json`;
+    
+    // Trigger download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showAlert('📥 Messages exported successfully!', 'success');
+}
+
 function clearMessages() {
-    if (confirm('Are you sure you want to clear all messages?')) {
+    if (confirm('Are you sure you want to clear all messages? This will permanently delete all saved messages.')) {
         messages = [];
+        // Clear from localStorage
+        localStorage.removeItem(STORAGE_KEY);
         renderMessages();
         updateMessageCount();
-        showAlert('🗑️ All messages cleared!', 'info');
+        showAlert('🗑️ All messages permanently cleared!', 'info');
     }
 }
 
@@ -380,3 +446,4 @@ document.head.appendChild(style);
 // Global functions for HTML onclick handlers
 window.closeWarning = closeWarning;
 window.clearMessages = clearMessages;
+window.exportMessages = exportMessages;
