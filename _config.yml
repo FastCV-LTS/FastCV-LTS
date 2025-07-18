@@ -1,44 +1,6 @@
 # GitHub Pages Configuration for FastCV-LTS
 title: "FastCV-LTS - Coming Soon"
 description: "The Next Generation CV/Resume Builder - Fast, Modern, Professional"
-url: "https://fastcv-lts.github.io"
-baseurl: "/FastCV-LTS"
 
-# Build settings
-markdown: kramdown
-highlighter: rouge
-theme: minima
-
-# Exclude files from processing
-exclude:
-  - README.md
-  - Gemfile
-  - Gemfile.lock
-  - node_modules
-  - vendor
-  - .sass-cache
-  - .jekyll-cache
-  - .jekyll-metadata
-
-# Include files
-include:
-  - _pages
-
-# Plugins
-plugins:
-  - jekyll-feed
-  - jekyll-sitemap
-  - jekyll-seo-tag
-
-# SEO settings
-author: FastCV-LTS Team
-twitter:
-  username: fastcv_lts
-  card: summary_large_image
-
-# Social links
-github_username: FastCV-LTS
-
-# Site settings
-lang: en
-timezone: UTC
+# Simple configuration for GitHub Pages
+# GitHub Pages will automatically serve index.html as the homepage
