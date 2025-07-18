@@ -39,6 +39,12 @@ document.addEventListener('DOMContentLoaded', function() {
     updateMessageCount();
     setupAdminKeyListener();
     checkAdminPassword();
+    
+    // Make functions globally available immediately
+    window.showAdminButtonNow = showAdminButtonNow;
+    window.resetAdminPassword = resetAdminPassword;
+    
+    console.log('Contact page initialized. Available functions: showAdminButtonNow(), resetAdminPassword()');
 });
 
 function initializeContactPage() {
