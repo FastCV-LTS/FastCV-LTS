@@ -329,11 +329,11 @@ async function downloadPDF() {
                 const photoX = pageWidth - margin - photoSize;
                 const photoY = yPosition - 5;
                 
-                // Create circular photo using canvas
-                const circularPhoto = await createCircularPhoto(data.photo, photoSize * 4); // Higher resolution
+                // Create circular photo
+                const circularPhotoDataUrl = await createCircularPhotoAsync(data.photo, photoSize * 3);
                 
                 // Add the circular photo to PDF
-                doc.addImage(circularPhoto, 'PNG', photoX, photoY, photoSize, photoSize);
+                doc.addImage(circularPhotoDataUrl, 'PNG', photoX, photoY, photoSize, photoSize);
                 
                 // Name and contact info (left side)
                 if (data.fullName) {
@@ -714,56 +714,73 @@ function removePhoto() {
     updatePreview();
 }
 
-// Function to create circular photo using canvas
-function createCircularPhoto(photoDataUrl, size) {
-    return new Promise((resolve) => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = size;
-        canvas.height = size;
-        
+// Function to create circular photo using canvas (async)
+function createCircularPhotoAsync(photoDataUrl, size) {
+    return new Promise((resolve, reject) => {
         const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
         img.onload = function() {
-            // Clear canvas with transparent background
-            ctx.clearRect(0, 0, size, size);
-            
-            // Create circular clipping path
-            ctx.beginPath();
-            ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
-            ctx.closePath();
-            ctx.clip();
-            
-            // Calculate dimensions to maintain aspect ratio and fill circle
-            const imgAspect = img.width / img.height;
-            let drawWidth, drawHeight, drawX, drawY;
-            
-            if (imgAspect > 1) {
-                // Image is wider than tall
-                drawHeight = size;
-                drawWidth = size * imgAspect;
-                drawX = -(drawWidth - size) / 2;
-                drawY = 0;
-            } else {
-                // Image is taller than wide
-                drawWidth = size;
-                drawHeight = size / imgAspect;
-                drawX = 0;
-                drawY = -(drawHeight - size) / 2;
+            try {
+                // Create canvas
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = size;
+                canvas.height = size;
+                
+                // Clear canvas with transparent background
+                ctx.clearRect(0, 0, size, size);
+                
+                // Create circular clipping path
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.clip();
+                
+                // Calculate dimensions to maintain aspect ratio and center the image
+                const imgAspect = img.width / img.height;
+                let drawWidth, drawHeight, drawX, drawY;
+                
+                if (imgAspect > 1) {
+                    // Image is wider than tall
+                    drawHeight = size;
+                    drawWidth = size * imgAspect;
+                    drawX = -(drawWidth - size) / 2;
+                    drawY = 0;
+                } else {
+                    // Image is taller than wide
+                    drawWidth = size;
+                    drawHeight = size / imgAspect;
+                    drawX = 0;
+                    drawY = -(drawHeight - size) / 2;
+                }
+                
+                // Draw the image
+                ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                
+                // Restore context
+                ctx.restore();
+                
+                // Add circular border
+                ctx.beginPath();
+                ctx.arc(size / 2, size / 2, size / 2 - 1, 0, Math.PI * 2);
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Convert to data URL
+                resolve(canvas.toDataURL('image/png'));
+                
+            } catch (error) {
+                console.error('Error creating circular photo:', error);
+                reject(error);
             }
-            
-            // Draw the image
-            ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-            
-            // Add a subtle border
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.beginPath();
-            ctx.arc(size / 2, size / 2, size / 2 - 1, 0, Math.PI * 2);
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            
-            // Convert to data URL
-            resolve(canvas.toDataURL('image/png'));
+        };
+        
+        img.onerror = function() {
+            console.error('Error loading image for circular conversion');
+            reject(new Error('Failed to load image'));
         };
         
         img.src = photoDataUrl;
