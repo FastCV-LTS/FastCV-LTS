@@ -33,23 +33,6 @@ FastCV-LTS is an innovative, lightning-fast CV/Resume builder designed for moder
 
 ---
 
-## 🔔 Stay Connected
-
-- ⭐ **Star** this repo to show support  
-- 👀 **Watch** for future updates  
----
-
-## 🤝 Contributing
-
-We’re excited to grow with the community. Contribution support will open soon with opportunities in:
-
-- Bug reports & feature requests  
-- Docs improvements  
-- Community suggestions  
-- Beta testing  
-
----
-
 ## 📧 Contact
 
 We'd love to hear from you!
