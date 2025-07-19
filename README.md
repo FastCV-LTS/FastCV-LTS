@@ -1,5 +1,3 @@
-# 🚀 FastCV-LTS
-
 <div align="center">
   <h1>🎉 FastCV-LTS is Live!</h1>
   <p><strong>The Next Generation CV/Resume Builder</strong></p>
