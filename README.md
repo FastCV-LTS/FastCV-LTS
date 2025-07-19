@@ -66,5 +66,3 @@ We'd love to hear from you!
 
 ---
 
-## 🌟 Feature Preview
-
